@@ -23,3 +23,6 @@ app.post("/ask", async (req, res) => {
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
+
+app.use(express.static("frontend")); 
+// Ensure your backend and frontend directories are siblings
