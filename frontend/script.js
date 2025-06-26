@@ -5,6 +5,8 @@ const historyBox = document.getElementById("history");
 
 let conversation = [];
 
+const apiUrl = "https://career-guidance-ai-1.onrender.com";  // Your Render backend URL
+
 chatForm.addEventListener("submit", async (e) => {
   e.preventDefault();
   const message = userInput.value.trim();
@@ -17,18 +19,19 @@ chatForm.addEventListener("submit", async (e) => {
   historyBox.innerHTML += `<div class="history-item">${message}</div>`;
 
   try {
-    const res = await fetch("/ask", {
+    const res = await fetch(`${apiUrl}/ask`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ message })
     });
+
     const { reply } = await res.json();
 
     appendMessage(reply, "bot");
     conversation.push({ role: "bot", content: reply });
 
   } catch {
-    appendMessage("Error: Could not reach server.", "bot");
+    appendMessage("❌ Error: Could not reach server.", "bot");
   }
 });
 
