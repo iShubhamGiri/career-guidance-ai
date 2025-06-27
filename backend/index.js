@@ -1,36 +1,36 @@
 const express = require("express");
 const cors = require("cors");
-const bodyParser = require("body-parser");
+const dotenv = require("dotenv");
+dotenv.config();
+
 const { OpenAI } = require("openai");
 
-require("dotenv").config();
-
 const app = express();
-const PORT = process.env.PORT || 3000;
+const port = process.env.PORT || 3000;
 
 app.use(cors());
-app.use(bodyParser.json());
+app.use(express.json());
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
 });
 
 app.post("/ask", async (req, res) => {
-  const { message } = req.body;
+  const userMessage = req.body.message;
 
   try {
-    const chatCompletion = await openai.chat.completions.create({
-      messages: [{ role: "user", content: message }],
+    const completion = await openai.chat.completions.create({
       model: "gpt-3.5-turbo",
+      messages: [{ role: "user", content: userMessage }],
     });
 
-    res.json({ reply: chatCompletion.choices[0].message.content });
+    res.json({ reply: completion.choices[0].message.content });
   } catch (error) {
-    console.error("OpenAI Error:", error);
-    res.status(500).json({ reply: "❌ Something went wrong." });
+    console.error("OpenAI error:", error);
+    res.status(500).json({ reply: "Something went wrong on the server." });
   }
 });
 
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
+app.listen(port, () => {
+  console.log(`Server is running on port ${port}`);
 });
