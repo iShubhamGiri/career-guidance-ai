@@ -1,25 +1,32 @@
 const express = require("express");
-const bodyParser = require("body-parser");
 const cors = require("cors");
-const app = express();
-const PORT = process.env.PORT || 3000;
+const bodyParser = require("body-parser");
+const { Configuration, OpenAIApi } = require("openai");
 
+const app = express();
 app.use(cors());
 app.use(bodyParser.json());
 
-app.get("/", (req, res) => {
-  res.send("Career Guidance AI Backend is Live!");
+const configuration = new Configuration({
+  apiKey: process.env.OPENAI_API_KEY, // ✅ You must set this in Render’s Environment Variables
 });
+const openai = new OpenAIApi(configuration);
 
 app.post("/ask", async (req, res) => {
-  const userInput = req.body.message;
+  const { message } = req.body;
 
-  // Placeholder for AI logic (e.g., OpenAI call)
-  res.json({ reply: `Thanks for your message: "${message}". (AI reply goes here...)` });
+  try {
+    const completion = await openai.createChatCompletion({
+      model: "gpt-3.5-turbo",
+      messages: [{ role: "user", content: message }],
+    });
 
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
+    const reply = completion.data.choices[0].message.content;
+    res.json({ reply });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ reply: "❌ Error reaching AI API." });
+  }
 });
 
-app.use(express.static("frontend")); 
-// Ensure your backend and frontend directories are siblings
+app.listen(3000, () => console.log("Server running on port 3000"));
