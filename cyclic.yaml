@@ -1,0 +1,5 @@
+name: career-guidance-ai
+type: node
+root: backend
+index: index.js
+start: node index.js
