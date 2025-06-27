@@ -1,0 +1,13 @@
+services:
+  - type: web
+    name: career-guidance-backend
+    env: node
+    plan: free
+    buildCommand: cd backend && npm install
+    startCommand: cd backend && node index.js
+    envVars:
+      - key: OPENROUTER_API_KEY
+        sync: false
+    region: oregon
+    autoDeploy: true
+    repo: https://github.com/iShubhamGiri/career-guidance-ai
