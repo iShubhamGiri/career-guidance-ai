@@ -2,10 +2,11 @@ const chatForm = document.getElementById("chatForm");
 const userInput = document.getElementById("userInput");
 const chatBox = document.getElementById("chatBox");
 
-const apiUrl = "https://career-guidance-ai-1.onrender.com".trim();
+const apiUrl = "https://career-guidance-ai-1.onrender.com"; // backend URL
 
 chatForm.addEventListener("submit", async (e) => {
   e.preventDefault();
+
   const message = userInput.value.trim();
   if (!message) return;
 
@@ -22,32 +23,24 @@ chatForm.addEventListener("submit", async (e) => {
     });
 
     const data = await res.json();
-
     removeTyping();
-
-    if (res.ok && data.reply) {
-      addMessage(data.reply, "bot");
-    } else {
-      console.error("API error:", data);
-      addMessage("⚠️ AI didn't respond as expected.", "bot");
-    }
+    addMessage(data.reply, "bot");
   } catch (err) {
     removeTyping();
-    addMessage("❌ Could not reach server.", "bot");
-    console.error("Network error:", err);
+    addMessage("❌ Unable to reach server. Try again later.", "bot");
   }
 });
 
-function addMessage(text, sender, isTemp = false) {
+function addMessage(text, sender, isTyping = false) {
   const el = document.createElement("div");
   el.className = `message ${sender}`;
+  if (isTyping) el.classList.add("typing");
   el.textContent = text;
-  if (isTemp) el.classList.add("temp");
   chatBox.appendChild(el);
   chatBox.scrollTop = chatBox.scrollHeight;
 }
 
 function removeTyping() {
-  const temp = document.querySelector(".message.bot.temp");
-  if (temp) temp.remove();
+  const typingMsg = document.querySelector(".message.bot.typing");
+  if (typingMsg) typingMsg.remove();
 }
