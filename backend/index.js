@@ -8,7 +8,7 @@ app.use(cors());
 app.use(bodyParser.json());
 
 const configuration = new Configuration({
-  apiKey: process.env.OPENAI_API_KEY, // ✅ You must set this in Render’s Environment Variables
+  apiKey: process.env.OPENAI_API_KEY, // Add this in Render dashboard
 });
 const openai = new OpenAIApi(configuration);
 
@@ -24,9 +24,9 @@ app.post("/ask", async (req, res) => {
     const reply = completion.data.choices[0].message.content;
     res.json({ reply });
   } catch (error) {
-    console.error(error);
+    console.error(error.response?.data || error.message);
     res.status(500).json({ reply: "❌ Error reaching AI API." });
   }
 });
 
-app.listen(3000, () => console.log("Server running on port 3000"));
+app.listen(3000, () => console.log("Career AI backend running on port 3000"));
