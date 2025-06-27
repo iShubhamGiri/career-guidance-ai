@@ -1,51 +1,46 @@
 const chatForm = document.getElementById("chatForm");
 const userInput = document.getElementById("userInput");
 const chatBox = document.getElementById("chatBox");
-const historyBox = document.getElementById("history");
 
-let conversation = [];
-
-const apiUrl = "https://career-guidance-ai-1.onrender.com";  // Your Render backend URL
+const apiUrl = "https://career-guidance-ai-1.onrender.com"; // your backend
 
 chatForm.addEventListener("submit", async (e) => {
   e.preventDefault();
   const message = userInput.value.trim();
   if (!message) return;
 
-  appendMessage(message, "user");
+  addMessage(message, "user");
   userInput.value = "";
 
-  conversation.push({ role: "user", content: message });
-  historyBox.innerHTML += `<div class="history-item">${message}</div>`;
+  addMessage("Typing...", "bot", true);
 
   try {
     const res = await fetch(`${apiUrl}/ask`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ message })
+      body: JSON.stringify({ message }),
     });
 
-    const { reply } = await res.json();
+    const data = await res.json();
 
-    appendMessage(reply, "bot");
-    conversation.push({ role: "bot", content: reply });
-
-  } catch {
-    appendMessage("❌ Error: Could not reach server.", "bot");
+    removeTyping();
+    addMessage(data.reply, "bot");
+  } catch (err) {
+    removeTyping();
+    addMessage("❌ Could not reach server.", "bot");
   }
 });
 
-function appendMessage(text, sender) {
+function addMessage(text, sender, isTemp = false) {
   const el = document.createElement("div");
   el.className = `message ${sender}`;
   el.textContent = text;
+  if (isTemp) el.classList.add("temp");
   chatBox.appendChild(el);
   chatBox.scrollTop = chatBox.scrollHeight;
 }
 
-historyBox.addEventListener("click", (e) => {
-  if (e.target.classList.contains("history-item")) {
-    userInput.value = e.target.textContent;
-    userInput.focus();
-  }
-});
+function removeTyping() {
+  const temp = document.querySelector(".message.bot.temp");
+  if (temp) temp.remove();
+}
