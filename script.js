@@ -2,7 +2,7 @@ const chatForm = document.getElementById("chatForm");
 const userInput = document.getElementById("userInput");
 const chatBox = document.getElementById("chatBox");
 
-const apiUrl = "https://career-guidance-ai-1.onrender.com"; // your backend
+const apiUrl = "https://career-guidance-ai-1.onrender.com".trim();
 
 chatForm.addEventListener("submit", async (e) => {
   e.preventDefault();
@@ -24,10 +24,17 @@ chatForm.addEventListener("submit", async (e) => {
     const data = await res.json();
 
     removeTyping();
-    addMessage(data.reply, "bot");
+
+    if (res.ok && data.reply) {
+      addMessage(data.reply, "bot");
+    } else {
+      console.error("API error:", data);
+      addMessage("⚠️ AI didn't respond as expected.", "bot");
+    }
   } catch (err) {
     removeTyping();
     addMessage("❌ Could not reach server.", "bot");
+    console.error("Network error:", err);
   }
 });
 
