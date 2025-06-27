@@ -15,10 +15,7 @@ app.post("/ask", async (req, res) => {
   const userInput = req.body.message;
 
   // Placeholder for AI logic (e.g., OpenAI call)
-  res.json({
-    reply: `Thanks for your message: "${userInput}". (AI reply goes here...)`
-  });
-});
+  res.json({ reply: `Thanks for your message: "${message}". (AI reply goes here...)` });
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
