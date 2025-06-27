@@ -7,19 +7,13 @@
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <div class="app">
-    <aside class="sidebar">
-      <h2>Career Guidance AI</h2>
-      <div class="history" id="history"></div>
-    </aside>
-    <main class="chat-container">
-      <div class="chat-header">Chat with CareerBot</div>
-      <div class="chat-box" id="chatBox"></div>
-      <form id="chatForm" class="chat-form">
-        <input type="text" id="userInput" placeholder="Ask about your career..." autocomplete="off" />
-        <button type="submit">➤</button>
-      </form>
-    </main>
+  <div class="container">
+    <header>Career Guidance Chatbot</header>
+    <main id="chatBox"></main>
+    <form id="chatForm">
+      <input type="text" id="userInput" placeholder="Ask about your career..." autocomplete="off"/>
+      <button type="submit">➤</button>
+    </form>
   </div>
   <script src="script.js"></script>
 </body>
