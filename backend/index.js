@@ -23,7 +23,8 @@ app.post("/ask", async (req, res) => {
         headers: {
           Authorization: `Bearer ${process.env.OPENROUTER_API_KEY}`,
           "Content-Type": "application/json",
-          "HTTP-Referer": "https://ishubhamgiri.github.io/career-guidance-ai/",
+          "Referer": "https://ishubhamgiri.github.io/career-guidance-ai/",
+          "X-Title": "Career Guidance AI",
         },
       }
     );
